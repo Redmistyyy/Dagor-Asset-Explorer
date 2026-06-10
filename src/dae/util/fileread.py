@@ -1,4 +1,3 @@
-from io import BufferedReader
 from io import BytesIO
 from struct import pack
 # from terminable import Terminable
@@ -14,7 +13,7 @@ class BBytesIO(BytesIO):
 			self.write(pack("I", len(string)))
 			self.write(string.encode())
 
-class BinFile(BufferedReader):
+class BinFile:
 	def __init__(self, data:bytes):
 		if type(data) == str:
 			file = open(data, "rb")
@@ -211,14 +210,14 @@ def toInt(data:bytes):
 
 
 
-def readEx(bytes:int, file:BufferedReader, signed = False):
+def readEx(bytes:int, file, signed = False):
 	return int.from_bytes(file.read(bytes),"little", signed=signed)
 
 
-def readByte(file:BufferedReader) -> int:
+def readByte(file) -> int:
 	return readEx(1,file)
 
-def readNameMap(file:BufferedReader, cnt:int, indicesOfs:int, ofs:int, parent = None, longs = False) -> list[str]:
+def readNameMap(file, cnt:int, indicesOfs:int, ofs:int, parent = None, longs = False) -> list[str]:
 	nameMapData = file.read(indicesOfs - file.tell())
 
 	nameMap = []
@@ -237,14 +236,14 @@ def readNameMap(file:BufferedReader, cnt:int, indicesOfs:int, ofs:int, parent = 
 	
 	return nameMap
 
-def readShort(file:BufferedReader) -> int:
+def readShort(file) -> int:
 	return readEx(2,file)
 
-def readSignedShort(file:BufferedReader) -> int:
+def readSignedShort(file) -> int:
 	return readEx(2,file, signed = True)
 
-def readInt(file:BufferedReader) -> int:
+def readInt(file) -> int:
 	return readEx(4,file)
 
-def readLong(file:BufferedReader) -> int:
+def readLong(file) -> int:
 	return readEx(8,file)

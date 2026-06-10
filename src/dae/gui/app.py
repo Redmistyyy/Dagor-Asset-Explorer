@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
 	taskTitle = pyqtSignal(str)
 	dialogClosed = pyqtSignal(bool)
 	itemsCreated = pyqtSignal()
+	itemsDiscovered = pyqtSignal(list)  # (parent, row) pairs for main-thread insertion
 
 	gridLayout:QGridLayout
 	treeView:CustomTreeView
@@ -109,6 +110,7 @@ class MainWindow(QMainWindow):
 		self.actionExpand.triggered.connect(self.treeView.expandAll)
 		self.actionCollapse.triggered.connect(self.treeView.collapseAll)
 		self.itemsCreated.connect(self.treeView.expandAll)
+		self.itemsDiscovered.connect(self.__addDiscoveredItems)
 
 		self.threadPool = QThreadPool()
 		self.activeTerminable:Terminable = None
@@ -116,6 +118,7 @@ class MainWindow(QMainWindow):
 		self.shouldTerminate = False
 		self.treeView.mainWindow = self
 		self.__taskStatus:str = ""
+		self._pendingRows:list = []
 
 		self.cachedIcons:dict[str:QIcon] = {}
 
@@ -193,6 +196,11 @@ class MainWindow(QMainWindow):
 	def __mapLoadFinished(self, map:DagorBinaryLevelData, cellData:list):
 		self.mapTab.mapLoadFinished(map, cellData)
 	
+	def __addDiscoveredItems(self, rows:list):
+		"""Slot: add items discovered on worker thread to the tree model (main thread safe)."""
+		for parent, row in rows:
+			parent.appendRow(row)
+
 	def mountAssets(self, paths:list[str]):
 		self.threadPool.start(partial(self.__mountAssetsInternal__, paths))
 	
@@ -201,9 +209,15 @@ class MainWindow(QMainWindow):
 		
 		self.setTaskTitle("Mounting assets")
 		self.setTaskStatus("Loading files...")
+
+		self._pendingRows.clear()
 	
 		for p in paths:
 			self.exploreFileInfo(QFileInfo(p), self.treeView.treeModel)
+
+		# Schedule tree model updates on the main thread
+		if self._pendingRows:
+			self.itemsDiscovered.emit(self._pendingRows)
 
 		if SETTINGS.getValue(SETTINGS_EXPAND_ALL):
 			self.setTaskStatus("Expanding items...")
@@ -283,7 +297,7 @@ class MainWindow(QMainWindow):
 						else:
 							item:AssetItem = self.getAssetItem(asset, finfo)
 							
-							parent.appendRow(item.getRow())
+							self._pendingRows.append((parent, item.getRow()))
 
 							success = True
 					except Exception as ex:
@@ -319,7 +333,7 @@ class MainWindow(QMainWindow):
 						hasFile = True
 				
 				if hasFile:
-					parent.appendRow(item.getRow())
+					self._pendingRows.append((parent, item.getRow()))
 
 				return hasFile
 		

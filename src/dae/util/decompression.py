@@ -15,7 +15,12 @@ from util.fileread import *
 
 dakernel = loadDLL("daKernel-dev.dll")
 
-if dakernel == None:
+oodle_compress = None
+oodle_decompress = None
+zstd_compress = None
+zstd_decompress = None
+
+if dakernel is None:
 	print("Failed to load daKernel-dev.dll")
 else:
 	# size_t __fastcall oodle_compress(void *dst, unsigned __int64 maxDstSize, const void *src, unsigned __int64 srcSize, int compressionLevel)
@@ -108,6 +113,8 @@ def compressBlock(data:bytes, cMethod:int, level:int = None):
 
 
 def oodleDecompress(src:bytes, maxOriginalSize:int = None):
+	if oodle_decompress is None:
+		raise RuntimeError("daKernel-dev.dll not loaded — cannot decompress Oodle data")
 	if not maxOriginalSize:
 		maxOriginalSize = toInt(src[:4])
 		src = src[4:]
@@ -123,6 +130,8 @@ def oodleDecompress(src:bytes, maxOriginalSize:int = None):
 	return dst.raw
 
 def oodleCompress(src:bytes, compressionLevel:int = 0x4):
+	if oodle_compress is None:
+		raise RuntimeError("daKernel-dev.dll not loaded — cannot compress Oodle data")
 	# enum oo2::OodleLZ_CompressionLevel, copyof_254, signed, width 4 bytes
 	# 	OodleLZ_CompressionLevel_None  = 0
 	# 	OodleLZ_CompressionLevel_SuperFast  = 1
@@ -174,6 +183,8 @@ def zstdDecompressTest(src:bytes, maxOriginalSize:int = None):
 	return dst.raw
 
 def zstdCompress(src:bytes, compressionLevel:int = 18):
+	if zstd_compress is None:
+		raise RuntimeError("daKernel-dev.dll not loaded — cannot compress Zstd data")
 	srcSize = len(src)
 	maxDstSize = srcSize
 	dst = create_string_buffer(maxDstSize)

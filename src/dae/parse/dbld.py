@@ -17,11 +17,12 @@ from parse.material import DDSx
 from parse.datablock import loadDataBlock
 from util.misc import loadDLL, matrixMul
 
-intrinsics = loadDLL("dae_intrinsics.dll")
-get_v482 = intrinsics.get_v482
-
-get_v482.argtypes = (ctypes.POINTER(ctypes.c_float), ctypes.c_float, ctypes.c_int)
-get_v482.restype = None
+_intrinsics = loadDLL("dae_intrinsics.dll")
+get_v482 = None
+if _intrinsics is not None:
+    get_v482 = _intrinsics.get_v482
+    get_v482.argtypes = (ctypes.POINTER(ctypes.c_float), ctypes.c_float, ctypes.c_int)
+    get_v482.restype = None
 
 
 def formatMagic(magic:bytes):
@@ -530,6 +531,8 @@ class DagorBinaryLevelData(Exportable):
 			cell_xz_sz = self.cellSz * self.grid2world
 
 			v482 = (ctypes.c_float * 5)()
+			if get_v482 is None:
+				raise RuntimeError("dae_intrinsics.dll not found — cannot compute cell coordinates")
 			get_v482(v482, cell_xz_sz, htDelta)
 			v482 = v482[:4]
 

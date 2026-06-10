@@ -12,47 +12,22 @@ from typing import Iterable, Reversible
 
 class Terminable:
 	class SafeRange:
-		def __init__(self, parent, start:int , stop:int = None, step:int = None): # ugly but fuck u
+		def __init__(self, parent, start:int, stop:int = None, step:int = None):
 			self.parent = parent
-
-			if stop == None and step == None:
-				self.stop = start
-				self.start = 0
-				self.step = 1
-			elif step == None:
-				self.start = start
-				self.stop = stop
-				self.step = 1
+			if stop is None and step is None:
+				self._it = iter(range(start))
+			elif step is None:
+				self._it = iter(range(start, stop))
 			else:
-				self.start = start
-				self.stop = stop
-				self.step = step
-			
-			if self.step == 0:
-				raise ValueError("SafeRange() arg 3 must not be zero")
-			
-			self.cur = self.start - self.step
+				self._it = iter(range(start, stop, step))
 
-			if self.step < 0:
-				self.val1 =  self.start - self.step
-				self.val2 =  self.stop - self.step
-			else:
-				self.val1 = self.stop
-				self.val2 = self.start
-		
 		def __iter__(self):
 			return self
-		
-		def __next__(self):
-			return self.next()
-		
-		def next(self):
-			self.cur += self.step
 
-			if self.cur >= self.val1 or self.cur < self.val2 or self.parent.shouldTerminate:
+		def __next__(self):
+			if self.parent.shouldTerminate:
 				raise StopIteration()
-			else:
-				return self.cur
+			return next(self._it)
 
 	class SafeEnumerate:
 		def __init__(self, parent, iterable:Iterable, start:int = None):
