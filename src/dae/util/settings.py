@@ -23,6 +23,7 @@ class Settings:
 		SETTINGS_DONT_EXPORT_EXISTING_TEXTURES:False,
 		SETTINGS_FORCE_DDS_CONVERSION:True,
 		SETTINGS_EXPAND_ALL:False,
+		SETTINGS_LANGUAGE:"en",
 	}
 
 	def saveSettings(self):
