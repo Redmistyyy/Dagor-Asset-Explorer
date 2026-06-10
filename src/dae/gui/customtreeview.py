@@ -3,9 +3,9 @@ from os import path, system, mkdir, makedirs, replace, listdir, rmdir
 import shutil
 import weakref
 from ..util import log
-from PyQt5.QtWidgets import QAbstractItemView, QTreeView, QLineEdit, QHeaderView, QMenu, QAction, QStyledItemDelegate, QFileDialog, QMainWindow
-from PyQt5.QtCore import QMimeData, Qt, QSortFilterProxyModel, QPoint, QFileInfo
-from PyQt5.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent, QStandardItemModel, QStandardItem, QIcon, QPaintEvent, QPainter
+from PySide6.QtWidgets import QAbstractItemView, QTreeView, QLineEdit, QHeaderView, QMenu, QStyledItemDelegate, QFileDialog, QMainWindow
+from PySide6.QtCore import QMimeData, Qt, QSortFilterProxyModel, QPoint, QFileInfo
+from PySide6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent, QStandardItemModel, QStandardItem, QIcon, QPaintEvent, QPainter, QAction
 from ..util.misc import formatBytes, getResPath, openFile, ROOT_FOLDER, LIB_FOLDER
 from ..util.terminable import Exportable, Packed, Pack, Terminable
 from ..util.enums import *
@@ -107,7 +107,7 @@ class SimpleItem:
 
 					log.subLevel(log.curLevel - level)
 
-					MessageBox("Failed to compute preliminary data. Check the console for details.").exec_()
+					MessageBox("Failed to compute preliminary data. Check the console for details.").exec()
 			elif isinstance(asset, Pack):
 				menu.addAction(ExtractAll(menu, self))
 

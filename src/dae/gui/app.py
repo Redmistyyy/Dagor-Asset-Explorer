@@ -2,14 +2,14 @@
 import sys
 from ..util import log
 import gc
-from PyQt5.uic import loadUi
-from PyQt5.QtCore import pyqtSignal, QDir, QFileInfo, QDirIterator, QRunnable, QThreadPool, QObject
-from PyQt5.QtWidgets import QMainWindow, QGridLayout, QAction, QFileDialog, QApplication
-from PyQt5.QtGui import QIcon, QStandardItem
+from PySide6.QtCore import Signal, QDir, QFileInfo, QDirIterator, QRunnable, QThreadPool, QObject
+from PySide6.QtWidgets import QMainWindow, QGridLayout, QFileDialog, QApplication
+from PySide6.QtGui import QIcon, QStandardItem, QAction
+from . import ui_dae
 from .customtreeview import CustomTreeView, AssetItem, FolderItem, SimpleItem
 from .progressDialog import ProgressDialog, BusyProgressDialog, MessageBox
 from .mapDialog import MapTab
-from ..util.misc import openFile, getResPath, getUIPath
+from ..util.misc import openFile, getResPath
 from ..util.assetmanager import AssetManager
 from ..util.settings import SETTINGS
 from ..parse.gameres import GameResDesc
@@ -24,8 +24,6 @@ from functools import partial
 from traceback import format_exc
 
 # LOADINGGIF_SIZE = QSize(150, 150)
-
-MAINWINDOWUI_PATH = getUIPath("dae.ui")
 
 SOUND_ICO_PATH = getResPath("asset_sound.bmp")
 SHOULD_CACHE:tuple[type[Exportable]] = (
@@ -61,16 +59,16 @@ def generateFileFilters():
 
 	return filters
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, ui_dae.Ui_DAEWindow):
 	__FILE_FILTERS = generateFileFilters()
 
-	requestedDialog = pyqtSignal(int)
-	taskProgress = pyqtSignal(int)
-	taskStatus = pyqtSignal(str)
-	taskTitle = pyqtSignal(str)
-	dialogClosed = pyqtSignal(bool)
-	itemsCreated = pyqtSignal()
-	itemsDiscovered = pyqtSignal(list)  # (parent, row) pairs for main-thread insertion
+	requestedDialog = Signal(int)
+	taskProgress = Signal(int)
+	taskStatus = Signal(str)
+	taskTitle = Signal(str)
+	dialogClosed = Signal(bool)
+	itemsCreated = Signal()
+	itemsDiscovered = Signal(list)  # (parent, row) pairs for main-thread insertion
 
 	gridLayout:QGridLayout
 	treeView:CustomTreeView
@@ -89,7 +87,7 @@ class MainWindow(QMainWindow):
 	def __init__(self):
 		super().__init__()
 		
-		loadUi(MAINWINDOWUI_PATH, self)
+		self.setupUi(self)
 
 		self.gridLayout.setContentsMargins(-1, -1, -1, -1)
 		
@@ -123,7 +121,7 @@ class MainWindow(QMainWindow):
 
 	def openSettings(self):
 		settings = SettingsDialog(self)
-		settings.exec_()
+		settings.exec()
 
 	def unmountAssets(self):
 		for v in self.clearItems: 
@@ -379,7 +377,7 @@ class MainWindow(QMainWindow):
 
 class MapLoadThread(QRunnable):
 	class Signals(QObject):
-		finished = pyqtSignal()
+		finished = Signal()
 
 		def __init__(self, *args, **kwargs):
 			super().__init__(*args, **kwargs)
@@ -440,7 +438,7 @@ class MapLoadThread(QRunnable):
 
 class MapExportThread(QRunnable):
 	class Signals(QObject):
-		finished = pyqtSignal()
+		finished = Signal()
 
 		def __init__(self, *args, **kwargs):
 			super().__init__(*args, **kwargs)
@@ -524,7 +522,7 @@ class App(QApplication):
 				self.progressDialog = BusyProgressDialog(self.window)
 			elif dialogType == DIALOG_ERROR:
 				box = MessageBox("An error occured during the process. Check the console for details.")
-				box.exec_()
+				box.exec()
 
 	def handleDialogTitle(self, txt:str):
 		if self.progressDialog is not None:
@@ -544,6 +542,6 @@ if __name__ == "__main__":
 	sys.excepthook = lambda cls, e, t: sys.__excepthook__(cls, e, t)
 
 	app = App(sys.argv)
-	exitCode = app.exec_()
+	exitCode = app.exec()
 
 	sys.exit(exitCode)

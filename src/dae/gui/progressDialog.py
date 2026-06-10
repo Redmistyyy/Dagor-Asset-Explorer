@@ -1,8 +1,8 @@
-from PyQt5 import QtWidgets, QtGui, uic
-from ..util.misc import getResPath, getUIPath
+from PySide6 import QtWidgets, QtGui
+from . import ui_progress
+from ..util.misc import getResPath
 from winsound import PlaySound, SND_ALIAS, SND_ASYNC
 
-PROGRESSDIALOG_UI_PATH = getUIPath("progressDialog.ui")
 LOADING_GIF_PATH = getResPath("loading.gif")
 ERROR_ICO_PATH = getResPath("failure.png")
 
@@ -22,7 +22,7 @@ class MessageBox(QtWidgets.QMessageBox):
 
 
 
-class ProgressDialog(QtWidgets.QDialog):
+class ProgressDialog(QtWidgets.QDialog, ui_progress.Ui_Dialog):
 	progressLabel:QtWidgets.QLabel
 	movieLabel:QtWidgets.QLabel
 	progressBar:QtWidgets.QProgressBar
@@ -33,7 +33,7 @@ class ProgressDialog(QtWidgets.QDialog):
 
 		self.mainWindow = mainWindow
 
-		uic.loadUi(PROGRESSDIALOG_UI_PATH, self)
+		self.setupUi(self)
 
 		movie = QtGui.QMovie(LOADING_GIF_PATH)
 		# movie.setScaledSize(LOADINGGIF_SIZE)

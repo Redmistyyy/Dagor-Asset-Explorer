@@ -3,12 +3,12 @@ from functools import partial
 from os import path, mkdir
 from traceback import format_exc
 
+from . import ui_mapwidget
 from ..util import log
-from PyQt5.QtWidgets import QWidget, QPushButton, QLineEdit, QCheckBox, QGridLayout, QSizePolicy, QLabel, QFileDialog
-from PyQt5.QtGui import QDropEvent
-from PyQt5.QtCore import pyqtSignal, QMimeData
-from PyQt5.uic import loadUi
-from ..util.misc import getUIPath, ROOT_FOLDER, openFile
+from PySide6.QtWidgets import QWidget, QPushButton, QLineEdit, QCheckBox, QGridLayout, QSizePolicy, QLabel, QFileDialog
+from PySide6.QtGui import QDropEvent
+from PySide6.QtCore import Signal, QMimeData
+from ..util.misc import ROOT_FOLDER, openFile
 from ..util.fileread import BBytesIO
 from ..parse.dbld import DagorBinaryLevelData
 from ..parse.realres import RendInst, DynModel
@@ -18,11 +18,9 @@ from ..util.assetcacher import AssetCacher
 from struct import pack
 
 
-MAPUI_PATH = getUIPath("mapWidget.ui")
-
 class CellButton(QPushButton):
 	selectedCount = 0
-	postClick = pyqtSignal()
+	postClick = Signal()
 
 	def __init__(self, name:str, checkable:bool):
 		super().__init__(name)
@@ -109,7 +107,7 @@ def getOutputDir():
 	
 	return output
 
-class MapTab(QWidget):
+class MapTab(QWidget, ui_mapwidget.Ui_Form):
 	browse:QPushButton
 	lineEdit:QLineEdit
 	exportButton:QPushButton
@@ -125,9 +123,8 @@ class MapTab(QWidget):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		
-		loadUi(MAPUI_PATH, self)
+		self.setupUi(self)
 		
-		self.browse.setAcceptDrops(True)
 		self.browse.clicked.connect(self.openMap)
 		self.browse.dropEvent = self.buttonDropEvent
 		self.browse.dragEnterEvent = self.buttonDragEvent
@@ -338,10 +335,10 @@ class MapTab(QWidget):
 
 
 if __name__ == "__main__":
-	from PyQt5.QtWidgets import QApplication
+	from PySide6.QtWidgets import QApplication
 
 	app = QApplication([])
 
 	widget = MapTab(None)
 	widget.show()
-	app.exec_()
+	app.exec()

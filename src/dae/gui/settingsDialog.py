@@ -1,14 +1,12 @@
 
-from PyQt5.QtWidgets import QDialog, QWidget, QCheckBox, QLineEdit, QPushButton, QFileDialog, QVBoxLayout
-from PyQt5.uic import loadUi
-from ..util.misc import getUIPath, openFile
+from PySide6.QtWidgets import QDialog, QWidget, QCheckBox, QLineEdit, QPushButton, QFileDialog, QVBoxLayout
+from . import ui_settings
+from ..util.misc import openFile
 from ..util.enums import *
 from ..util.settings import SETTINGS
 
 
-SETTINGSUI_PATH = getUIPath("settings.ui")
-
-class SettingsDialog(QDialog):
+class SettingsDialog(QDialog, ui_settings.Ui_settings):
 	vLayout:QVBoxLayout
 
 	exportFolder:QCheckBox
@@ -35,7 +33,7 @@ class SettingsDialog(QDialog):
 	def __init__(self, parent:QWidget):
 		super().__init__(parent)
 
-		loadUi(SETTINGSUI_PATH, self)
+		self.setupUi(self)
 
 		self.vLayout.setContentsMargins(-1, -1, -1, -1)
 

@@ -1,5 +1,5 @@
 
-from util.terminable import Exportable
+from .terminable import Exportable
 from collections import OrderedDict
 
 class AssetCacher:

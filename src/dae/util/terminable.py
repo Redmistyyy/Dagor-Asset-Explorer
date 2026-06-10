@@ -2,7 +2,7 @@
 from os import path, getcwd, stat
 
 from . import log
-from PyQt5.QtCore import QObject
+from PySide6.QtCore import QObject
 from abc import ABC, abstractmethod
 from .fileread import BinFile
 from typing import Iterable, Reversible

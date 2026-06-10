@@ -3,8 +3,8 @@ import math
 from os import path
 from ctypes import cdll
 from typing import Iterable
-from PyQt5.QtCore import QDir, Qt
-from PyQt5.QtWidgets import QFileDialog, QDialog
+from PySide6.QtCore import QDir, Qt
+from PySide6.QtWidgets import QFileDialog, QDialog
 
 def getParentDir(filePath:str, level:int = 1):
 	if level <= 0:
@@ -100,7 +100,7 @@ def openFile(window = None, title:str = "", nameFilters:Iterable = None, shouldA
 		if nameFilters != None:
 			dialog.setNameFilters(nameFilters)
 
-		if dialog.exec_() == QDialog.Accepted:
+		if dialog.exec() == QDialog.Accepted:
 			selectedFolderValid = shouldAccept(dialog)
 		else:
 			return None
