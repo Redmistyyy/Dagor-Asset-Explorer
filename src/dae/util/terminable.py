@@ -213,6 +213,7 @@ class Packed(Exportable):
 
 			file.close()
 
+			self.__cachedBin = bin   # cache for reuse
 			return bin
 		else:
 			return self.__cachedBin

@@ -1557,6 +1557,7 @@ class RendInst(RealResData, ModelContainer):
 		self.__textures:list[str] = None
 		self.__materials:list[MaterialData] = None
 		self.__collisionGeom:GeomNodeTree = None
+		self.__lodCnt = 1    # default before computeData()
 
 		self.__texCnt = 0
 		self.__matCnt = 0

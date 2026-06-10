@@ -204,6 +204,8 @@ class MainWindow(QMainWindow):
 	def mountAssets(self, paths:list[str]):
 		self.threadPool.start(partial(self.__mountAssetsInternal__, paths))
 	
+	BATCH_SIZE = 20  # emit items to tree in chunks for progressive loading
+
 	def __mountAssetsInternal__(self, paths:list[str]):
 		self.setRequestedDialog(DIALOG_STATUS)
 		
@@ -214,10 +216,10 @@ class MainWindow(QMainWindow):
 	
 		for p in paths:
 			self.exploreFileInfo(QFileInfo(p), self.treeView.treeModel)
-
-		# Schedule tree model updates on the main thread
-		if self._pendingRows:
-			self.itemsDiscovered.emit(self._pendingRows)
+			# flush any remaining items after each path
+			if self._pendingRows:
+				self.itemsDiscovered.emit(self._pendingRows)
+				self._pendingRows = []
 
 		if SETTINGS.getValue(SETTINGS_EXPAND_ALL):
 			self.setTaskStatus("Expanding items...")
@@ -311,6 +313,11 @@ class MainWindow(QMainWindow):
 				log.subLevel()
 
 				self.clearTerminable()
+
+				# progressive: emit items in batches so tree populates as we go
+				if len(self._pendingRows) >= self.BATCH_SIZE:
+					self.itemsDiscovered.emit(self._pendingRows)
+					self._pendingRows = []
 
 				return success
 		elif finfo.isDir():

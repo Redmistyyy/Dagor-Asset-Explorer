@@ -4,6 +4,7 @@ from os import path, system, mkdir, makedirs, replace, listdir, rmdir
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import shutil
+import weakref
 import util.log as log
 from PyQt5.QtWidgets import QAbstractItemView, QTreeView, QLineEdit, QHeaderView, QMenu, QAction, QStyledItemDelegate, QFileDialog, QMainWindow
 from PyQt5.QtCore import QMimeData, Qt, QSortFilterProxyModel, QPoint, QFileInfo
@@ -31,7 +32,8 @@ class SafeStandardItem(QStandardItem):
 		super().__init__(*args, **kwargs)
 	
 	def setParentItem(self, item):
-		item.mainWindow.clearItems.append(lambda: self.clearData())
+		wr = weakref.ref(self)
+		item.mainWindow.clearItems.append(lambda wr=wr: wr() and wr().clearData())
 
 		self.setData(item, Qt.UserRole)
 
@@ -91,9 +93,8 @@ class SimpleItem:
 						menu.addAction(ExportToSource(menu, self, 0))
 						menu.addAction(ExportToOBJ(menu, self, 0))
 
-						asset.computeData()
-
-						if asset.lodCount > 1:
+						# LOD submenu if data already computed (no sync call — exports handle it)
+						if hasattr(asset, 'lodCount') and asset.lodCount > 1:
 							submenu = menu.addMenu("Export LOD...")
 
 							for i in range(asset.lodCount):
