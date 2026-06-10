@@ -1,6 +1,5 @@
 from io import BytesIO
 from struct import pack
-# from terminable import Terminable
 
 class BBytesIO(BytesIO):
 	def writeInt(self, num:int):
@@ -123,7 +122,6 @@ class BinFile:
 class BinBlock(BinFile): # guess who accidentally reinvented memoryview() :)
 	def __init__(self, parent:BinFile, offset:int, size:int):
 		self.__parent = parent
-		# self.__data = parent.getData()
 		self.__size = size
 		self.__offset = 0
 		self.__absOffset = offset

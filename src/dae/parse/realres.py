@@ -1,22 +1,18 @@
-import sys
 from os import path, getcwd, mkdir, makedirs
 from typing import Iterable, Union
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-
-import util.log as log
+from ..util import log
 from io import BytesIO
-from util.fileread import *
-from util.enums import *
-from util.decompression import CompressedData, zlibDecompress
-from util.misc import getResPath, vectorTransform, matrixMul, matrixToEuler
-from util.assetcacher import AssetCacher
+from ..util.fileread import *
+from ..util.enums import *
+from ..util.decompression import CompressedData, zlibDecompress
+from ..util.misc import getResPath, vectorTransform, matrixMul, matrixToEuler
+from ..util.assetcacher import AssetCacher
 from struct import unpack, pack
-from parse.datablock import *
-from util.terminable import Packed, SafeRange, SafeIter, SafeEnumerate, Terminable
-from parse.mesh import MatVData, InstShaderMeshResource, ShaderMesh
-from parse.material import MaterialData, MaterialTemplateLibrary,  computeMaterialNames, TexturePathDict
+from .datablock import *
+from ..util.terminable import Packed, SafeRange, SafeIter, SafeEnumerate, Terminable
+from .mesh import MatVData, InstShaderMeshResource, ShaderMesh
+from .material import MaterialData, MaterialTemplateLibrary,  computeMaterialNames, TexturePathDict
 from abc import abstractmethod, ABC
 from math import sqrt
 
@@ -1244,8 +1240,6 @@ class RealResData(Packed):
 	def __init__(self, filePath:str, name:str = None, size:int = 0, offset:int = 0):
 		super().__init__(filePath, name, size, offset)
 		
-		# self.setupClassName()
-
 		self._setValid()
 
 
@@ -1408,7 +1402,6 @@ class GeomNodeTree(RealResData, ModelContainer):
 		
 		nodeCnt = readInt(file)
 
-		# self.__nodes = dict(tuple(tuple((v.name, v) for v in (self.Node(file.readBlock(160), file), ))[0] for i in range(nodeCnt)), )
 		nodes = tuple(self.Node(file.readBlock(160), file, i) for i in SafeRange(self, nodeCnt))
 		
 		
@@ -1622,7 +1615,6 @@ class RendInst(RealResData, ModelContainer):
 		num = readInt(file)
 		self.mvdHdrSz = num & 0x3FFFFFFF
 		self.mvdHdrFlag = num != self.mvdHdrSz
-		# self.mvdHdrNum = num
 
 		if texCnt == matCnt == 0xFFFFFFFF:
 			log.log("Pulling material and texture count from GameResDesc") # TODO
@@ -2387,9 +2379,6 @@ class CollisionGeom(RealResData, ModelContainer):
 		else:
 			collisionFlags = 0
 		
-		# self.__version = version
-		# self.__collisionFlags = collisionFlags
-
 		nodeCnt = readInt(block)
 
 		self.__nodes = tuple(self.__createNode__(block, collisionFlags, version) for _ in SafeRange(self, nodeCnt))

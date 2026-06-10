@@ -1,21 +1,17 @@
 
-import sys
 from os import path, getcwd
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-
-import util.log as log
+from ..util import log
 import ctypes
-from util.fileread import *
-from util.decompression import CompressedData, zlibDecompress, zstdCompress, compressBlock
-from util.terminable import Exportable, Terminable, SafeRange
+from ..util.fileread import *
+from ..util.decompression import CompressedData, zlibDecompress, zstdCompress, compressBlock
+from ..util.terminable import Exportable, Terminable, SafeRange
 from struct import unpack, pack
-from util.enums import *
-from parse.mesh import MatVData, ShaderMesh
-from parse.material import DDSx
-from parse.datablock import loadDataBlock
-from util.misc import loadDLL, matrixMul
+from ..util.enums import *
+from .mesh import MatVData, ShaderMesh
+from .material import DDSx
+from .datablock import loadDataBlock
+from ..util.misc import loadDLL, matrixMul
 
 _intrinsics = loadDLL("dae_intrinsics.dll")
 get_v482 = None

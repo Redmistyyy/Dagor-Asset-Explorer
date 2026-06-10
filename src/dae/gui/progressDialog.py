@@ -1,10 +1,5 @@
-import sys
-from os import path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
 from PyQt5 import QtWidgets, QtGui, uic
-from util.misc import getResPath, getUIPath
+from ..util.misc import getResPath, getUIPath
 from winsound import PlaySound, SND_ALIAS, SND_ASYNC
 
 PROGRESSDIALOG_UI_PATH = getUIPath("progressDialog.ui")
@@ -40,8 +35,6 @@ class ProgressDialog(QtWidgets.QDialog):
 
 		uic.loadUi(PROGRESSDIALOG_UI_PATH, self)
 
-		# self.setWindowTitle(title)
-		
 		movie = QtGui.QMovie(LOADING_GIF_PATH)
 		# movie.setScaledSize(LOADINGGIF_SIZE)
 		movie.start()
@@ -49,8 +42,6 @@ class ProgressDialog(QtWidgets.QDialog):
 		self.movieLabel.setMovie(movie)
 
 		self.cancelButton.clicked.connect(self.cancel)
-
-		# self.setFixedSize(self.size())
 
 		self.show()
 	

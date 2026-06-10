@@ -1,10 +1,5 @@
-import sys
-from os import path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
 from time import time
-from util.enums import *
+from .enums import *
 from threading import currentThread
 
 startTime = time()

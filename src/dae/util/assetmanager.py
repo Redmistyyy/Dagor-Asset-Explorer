@@ -1,14 +1,11 @@
-import sys
 from os import path
 from typing import Union
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
-from parse.gameres import *
-from parse.material import DDSx, DDSxTexturePack2
-from util.enums import *
-from util.terminable import Exportable
+from . import log
+from ..parse.gameres import *
+from ..parse.material import DDSx, DDSxTexturePack2
+from .enums import *
+from .terminable import Exportable
 
 def extend(d:dict, key, value):
 	d[key] = value

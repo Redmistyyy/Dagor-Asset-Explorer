@@ -1,14 +1,11 @@
-import sys
 from os import path, getcwd, mkdir, makedirs
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
-from util.fileread import *
-from util.terminable import Packed, Pack, SafeIter, SafeRange, SafeEnumerate, SafeReversed, Terminable
-from util.decompression import zstdDecompress, oodleDecompress, zlibDecompress, lzmaDecompress
-from util.enums import *
-from util.assetcacher import AssetCacher
+from ..util import log
+from ..util.fileread import *
+from ..util.terminable import Packed, Pack, SafeIter, SafeRange, SafeEnumerate, SafeReversed, Terminable
+from ..util.decompression import zstdDecompress, oodleDecompress, zlibDecompress, lzmaDecompress
+from ..util.enums import *
+from ..util.assetcacher import AssetCacher
 from struct import pack_into as packInto
 from struct import pack
 from ctypes import create_string_buffer
@@ -1079,7 +1076,7 @@ def computeMaterialNames(mats:list[MaterialData], parent:Terminable = None):
 # 	return materials
 
 if __name__ == "__main__":
-	from gameres import GameResDesc
+	from .gameres import GameResDesc
 
 	dxp = DDSxTexturePack2("C:\\Program Files (x86)\\Steam\\steamapps\\common\\War Thunder\\content\\base\\res\\cars_ri.dxp.bin")
 	

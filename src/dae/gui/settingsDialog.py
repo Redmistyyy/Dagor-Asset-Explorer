@@ -1,14 +1,9 @@
 
-import sys
-from os import path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
 from PyQt5.QtWidgets import QDialog, QWidget, QCheckBox, QLineEdit, QPushButton, QFileDialog, QVBoxLayout
 from PyQt5.uic import loadUi
-from util.misc import getUIPath, openFile
-from util.enums import *
-from util.settings import SETTINGS
+from ..util.misc import getUIPath, openFile
+from ..util.enums import *
+from ..util.settings import SETTINGS
 
 
 SETTINGSUI_PATH = getUIPath("settings.ui")

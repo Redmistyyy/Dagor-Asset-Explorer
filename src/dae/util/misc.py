@@ -6,9 +6,6 @@ from typing import Iterable
 from PyQt5.QtCore import QDir, Qt
 from PyQt5.QtWidgets import QFileDialog, QDialog
 
-# def getPath(relativePath:str):
-# 	return path.abspath(path.join(path.dirname(__file__), relativePath))
-
 def getParentDir(filePath:str, level:int = 1):
 	if level <= 0:
 		return filePath

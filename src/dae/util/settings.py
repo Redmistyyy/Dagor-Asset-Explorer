@@ -1,13 +1,9 @@
 
-import sys
-from os import path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
 from json import loads, dumps
-from util.decompression import lzmaCompress, lzmaDecompress
-from util.misc import ROOT_FOLDER
-from util.enums import *
+from os import path
+from .decompression import lzmaCompress, lzmaDecompress
+from .misc import ROOT_FOLDER
+from .enums import *
 
 compressSettings = False
 

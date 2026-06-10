@@ -1,25 +1,22 @@
-import sys
 from os import path, system, mkdir, makedirs, replace, listdir, rmdir
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import shutil
 import weakref
-import util.log as log
+from ..util import log
 from PyQt5.QtWidgets import QAbstractItemView, QTreeView, QLineEdit, QHeaderView, QMenu, QAction, QStyledItemDelegate, QFileDialog, QMainWindow
 from PyQt5.QtCore import QMimeData, Qt, QSortFilterProxyModel, QPoint, QFileInfo
 from PyQt5.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent, QStandardItemModel, QStandardItem, QIcon, QPaintEvent, QPainter
-from util.misc import formatBytes, getResPath, openFile, ROOT_FOLDER, LIB_FOLDER
-from util.terminable import Exportable, Packed, Pack, Terminable
-from util.enums import *
+from ..util.misc import formatBytes, getResPath, openFile, ROOT_FOLDER, LIB_FOLDER
+from ..util.terminable import Exportable, Packed, Pack, Terminable
+from ..util.enums import *
 from pyperclip import copy as copyToClipboard
 from functools import partial
-from parse.material import DDSx, DDSxTexturePack2
-from parse.realres import RendInst, ModelContainer, GeomNodeTree
-from parse.gameres import GameResourcePack
+from ..parse.material import DDSx, DDSxTexturePack2
+from ..parse.realres import RendInst, ModelContainer, GeomNodeTree
+from ..parse.gameres import GameResourcePack
 from traceback import format_exc
-from gui.progressDialog import MessageBox
-from util.settings import SETTINGS
+from .progressDialog import MessageBox
+from ..util.settings import SETTINGS
 from subprocess import Popen
 from glob import glob
 
@@ -63,9 +60,6 @@ class SimpleItem:
 		if self.finfo is not None:
 			menu.addAction(CopyPathToClipboard(menu, self))
 		
-		# if len(menu.children()) > 0:
-		# 	menu.addSeparator()
-		
 		if isinstance(self, AssetItem):
 			asset = self.asset
 
@@ -82,8 +76,6 @@ class SimpleItem:
 				level = log.curLevel
 
 				try:
-					# menu.addAction(PreviewModel(menu, self, 0))
-
 					if isinstance(asset, GeomNodeTree):
 						menu.addAction(ExportSkeletonToDMF(menu, self, 0))
 					else:
@@ -124,7 +116,6 @@ class SimpleItem:
 				elif isinstance(asset, GameResourcePack):
 					menu.addAction(ExportAllToDMF(menu, self))
 					menu.addAction(ExportAllToOBJ(menu, self))
-					# menu.addAction(ExportAllLODsToOBJ(menu, self))
 	
 	def autoExpand(self):
 		if SETTINGS.getValue(SETTINGS_EXPAND_ALL):
@@ -540,15 +531,6 @@ class PreviewModel(CustomAction):
 	@property
 	def taskTitle(self) -> str:
 		return f"Previewing {self.item.asset.getExportName(self.lod)}.obj"
-
-	# def save(self):
-	# 	asset:RendInst = self.item.asset
-	# 	self.setTerminable(asset)
-		
-	# 	obj = asset.getObj(self.lod)
-
-	# 	self.setTaskProgress(1)
-	# 	self.clearTerminable()
 
 	def run(self):
 		asset:RendInst = self.item.asset

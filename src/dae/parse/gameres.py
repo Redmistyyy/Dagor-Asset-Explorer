@@ -1,16 +1,13 @@
-import sys
 from os import path, getcwd
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
-from util.fileread import *
-from util.enums import *
-from parse.datablock import *
-from parse.realres import RealResData, UnknownResData, REALRES_CLASSES_DICT
-from util.terminable import SafeRange, Pack, Terminable, FilePathable, SafeEnumerate, SafeIter
-from util.decompression import zstdDecompress
-from parse.material import MaterialData, computeMaterialNames
+from ..util import log
+from ..util.fileread import *
+from ..util.enums import *
+from .datablock import *
+from .realres import RealResData, UnknownResData, REALRES_CLASSES_DICT
+from ..util.terminable import SafeRange, Pack, Terminable, FilePathable, SafeEnumerate, SafeIter
+from ..util.decompression import zstdDecompress
+from .material import MaterialData, computeMaterialNames
 
 
 class GameResDesc(FilePathable, Terminable):

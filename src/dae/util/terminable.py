@@ -1,13 +1,10 @@
 
-import sys
 from os import path, getcwd, stat
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
+from . import log
 from PyQt5.QtCore import QObject
 from abc import ABC, abstractmethod
-from util.fileread import BinFile
+from .fileread import BinFile
 from typing import Iterable, Reversible
 
 class Terminable:

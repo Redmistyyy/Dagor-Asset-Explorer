@@ -1,14 +1,11 @@
-import sys
 from os import path, getcwd
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
+from ..util import log
 from struct import unpack
-from util.fileread import *
-from util.terminable import SafeRange, Terminable, FilePathable, SafeIter, SafeEnumerate
-from util.enums import *
-from parse.material import MaterialData
+from ..util.fileread import *
+from ..util.terminable import SafeRange, Terminable, FilePathable, SafeIter, SafeEnumerate
+from ..util.enums import *
+from .material import MaterialData
 from abc import ABC, abstractmethod
 
 

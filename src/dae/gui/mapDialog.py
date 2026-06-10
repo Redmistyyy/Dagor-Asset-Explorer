@@ -1,23 +1,20 @@
 
 from functools import partial
-import sys
 from os import path, mkdir
 from traceback import format_exc
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
+from ..util import log
 from PyQt5.QtWidgets import QWidget, QPushButton, QLineEdit, QCheckBox, QGridLayout, QSizePolicy, QLabel, QFileDialog
 from PyQt5.QtGui import QDropEvent
 from PyQt5.QtCore import pyqtSignal, QMimeData
 from PyQt5.uic import loadUi
-from util.misc import getUIPath, ROOT_FOLDER, openFile
-from util.fileread import BBytesIO
-from parse.dbld import DagorBinaryLevelData
-from parse.realres import RendInst, DynModel
-from util.enums import *
-from util.settings import SETTINGS
-from util.assetcacher import AssetCacher
+from ..util.misc import getUIPath, ROOT_FOLDER, openFile
+from ..util.fileread import BBytesIO
+from ..parse.dbld import DagorBinaryLevelData
+from ..parse.realres import RendInst, DynModel
+from ..util.enums import *
+from ..util.settings import SETTINGS
+from ..util.assetcacher import AssetCacher
 from struct import pack
 
 
@@ -135,9 +132,6 @@ class MapTab(QWidget):
 		self.browse.dropEvent = self.buttonDropEvent
 		self.browse.dragEnterEvent = self.buttonDragEvent
 		self.browse.dragMoveEvent = self.buttonDragEvent
-		# self.browse.setDragEnabled(True)
-		# self.browse.setDragDropMode(QAbstractItemView.DragDropMode.DragDrop)
-
 		self.map:DagorBinaryLevelData = None
 		self.cellData:list = None
 
@@ -175,12 +169,6 @@ class MapTab(QWidget):
 		
 		return None
 		
-	# def dragEnterEvent(self, event:QDragEnterEvent):
-	# 	if self.getEventPath(event.mimeData()) is None:
-	# 		event.ignore()
-	# 	else:
-	# 		event.accept()
-	
 	def openMap(self):
 		if self.mainWindow is not None:
 			self.mainWindow.openLevelFile(self.enlistedMap.isChecked())

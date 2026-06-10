@@ -1,29 +1,25 @@
 
 import sys
-from os import path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-import util.log as log
+from ..util import log
 import gc
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import pyqtSignal, QDir, QFileInfo, QDirIterator, QRunnable, QThreadPool, QObject
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QAction, QFileDialog, QApplication
 from PyQt5.QtGui import QIcon, QStandardItem
-from gui.customtreeview import CustomTreeView, AssetItem, FolderItem, SimpleItem
-from gui.progressDialog import ProgressDialog, BusyProgressDialog, MessageBox
-from gui.mapDialog import MapTab
-from util.misc import openFile, getResPath, getUIPath
-from util.assetmanager import AssetManager
-from util.settings import SETTINGS
-from parse.gameres import GameResDesc
-from parse.realres import GeomNodeTree, DynModel, RendInst, CollisionGeom
-from parse.material import DDSx
-from parse.dbld import DagorBinaryLevelData
-from util.assetcacher import AssetCacher
-from util.enums import *
-from util.terminable import Exportable, Pack, Terminable
-from gui.settingsDialog import SettingsDialog
+from .customtreeview import CustomTreeView, AssetItem, FolderItem, SimpleItem
+from .progressDialog import ProgressDialog, BusyProgressDialog, MessageBox
+from .mapDialog import MapTab
+from ..util.misc import openFile, getResPath, getUIPath
+from ..util.assetmanager import AssetManager
+from ..util.settings import SETTINGS
+from ..parse.gameres import GameResDesc
+from ..parse.realres import GeomNodeTree, DynModel, RendInst, CollisionGeom
+from ..parse.material import DDSx
+from ..parse.dbld import DagorBinaryLevelData
+from ..util.assetcacher import AssetCacher
+from ..util.enums import *
+from ..util.terminable import Exportable, Pack, Terminable
+from .settingsDialog import SettingsDialog
 from functools import partial
 from traceback import format_exc
 
@@ -104,7 +100,6 @@ class MainWindow(QMainWindow):
 		self.actionClose.triggered.connect(self.close)
 		self.actionOpenFolder.triggered.connect(self.openFolder)
 		self.actionOpenFiles.triggered.connect(self.openAssets)
-		# self.actionOpenMap.triggered.connect(self.openMap)
 		self.actionUnmount.triggered.connect(self.unmountAssets)
 		self.actionSettings.triggered.connect(self.openSettings)
 		self.actionExpand.triggered.connect(self.treeView.expandAll)
@@ -175,7 +170,6 @@ class MainWindow(QMainWindow):
 			return
 		
 		self.loadMap(dialog.selectedFiles()[0], enlisted)
-		# self.loadMap("C:\\Program Files (x86)\\Steam\\steamapps\\common\\War Thunder\\levels\\avg_normandy.bin", enlisted)
 	
 	def loadMap(self, path:str, enlisted:bool):
 		map = DagorBinaryLevelData(path)
@@ -287,7 +281,6 @@ class MainWindow(QMainWindow):
 					level = log.curLevel
 
 					try:
-						# pass
 						asset = AssetManager.initializeAsset(absFilePath, suffix)
 
 						handleCaching(asset)
@@ -551,7 +544,6 @@ if __name__ == "__main__":
 	sys.excepthook = lambda cls, e, t: sys.__excepthook__(cls, e, t)
 
 	app = App(sys.argv)
-	# app.window.mountAssets([r"C:/Program Files (x86)/Steam/steamapps/common/War Thunder/content/base/res/aircrafts"])
 	exitCode = app.exec_()
 
 	sys.exit(exitCode)
