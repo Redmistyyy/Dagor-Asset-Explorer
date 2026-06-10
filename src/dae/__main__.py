@@ -9,7 +9,11 @@ _lib = path.join(_rootdir, "Lib", "site-packages")
 if path.exists(_lib):
 	sys.path.insert(0, _lib)
 
-from .gui import app
+# Load language before GUI init
+from .strings import load_lang
+from .util.settings import SETTINGS
+from .util.enums import SETTINGS_LANGUAGE
+load_lang(SETTINGS.getValue(SETTINGS_LANGUAGE) or "en")
 
 from .gui import app
 

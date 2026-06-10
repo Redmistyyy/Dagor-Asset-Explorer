@@ -22,6 +22,7 @@ from ..util.terminable import Exportable, Pack, Terminable
 from .settingsDialog import SettingsDialog
 from functools import partial
 from traceback import format_exc
+from ..strings import _
 
 # LOADINGGIF_SIZE = QSize(150, 150)
 
@@ -145,7 +146,7 @@ class MainWindow(QMainWindow, ui_dae.Ui_DAEWindow):
 		return self.cachedIcons[icon]
 
 	def openFolder(self):
-		dialog = openFile(title = "Open asset folder", fileMode = QFileDialog.DirectoryOnly)
+		dialog = openFile(title = _("Open asset folder"), fileMode = QFileDialog.DirectoryOnly)
 
 		if dialog is None:
 			return
@@ -154,7 +155,7 @@ class MainWindow(QMainWindow, ui_dae.Ui_DAEWindow):
 	
 	
 	def openAssets(self):
-		dialog = openFile(title = "Open assets", nameFilters = self.__FILE_FILTERS)
+		dialog = openFile(title = _("Open assets"), nameFilters = self.__FILE_FILTERS)
 
 		if dialog is None:
 			return
@@ -162,7 +163,7 @@ class MainWindow(QMainWindow, ui_dae.Ui_DAEWindow):
 		self.mountAssets(dialog.selectedFiles())
 	
 	def openLevelFile(self, enlisted:bool):
-		dialog = openFile(title = "Open level file", nameFilters = DBLD_FILTER, fileMode = QFileDialog.ExistingFile)
+		dialog = openFile(title = _("Open level file"), nameFilters = DBLD_FILTER, fileMode = QFileDialog.ExistingFile)
 
 		if dialog is None:
 			return
@@ -201,8 +202,8 @@ class MainWindow(QMainWindow, ui_dae.Ui_DAEWindow):
 	def __mountAssetsInternal__(self, paths:list[str]):
 		self.setRequestedDialog(DIALOG_STATUS)
 		
-		self.setTaskTitle("Mounting assets")
-		self.setTaskStatus("Loading files...")
+		self.setTaskTitle(_("Mounting assets"))
+		self.setTaskStatus(_("Loading files..."))
 
 		self._pendingRows.clear()
 	
@@ -214,7 +215,7 @@ class MainWindow(QMainWindow, ui_dae.Ui_DAEWindow):
 				self._pendingRows = []
 
 		if SETTINGS.getValue(SETTINGS_EXPAND_ALL):
-			self.setTaskStatus("Expanding items...")
+			self.setTaskStatus(_("Expanding items..."))
 			self.itemsCreated.emit()
 		
 		self.setRequestedDialog(DIALOG_NONE)
@@ -401,15 +402,15 @@ class MapLoadThread(QRunnable):
 		
 		mainWindow.setRequestedDialog(DIALOG_STATUS)
 		
-		mainWindow.setTaskTitle("Loading map...")
-		mainWindow.setTaskStatus("Loading map data...")
+		mainWindow.setTaskTitle(_("Loading map..."))
+		mainWindow.setTaskStatus(_("Loading map data..."))
 
 		try:
 			mainWindow.setTerminable(map)
 
 			map.computeData()
 
-			mainWindow.setTaskStatus("Loading cell entities...")
+			mainWindow.setTaskStatus(_("Loading cell entities..."))
 
 			riGen = map.riGenLayers[0]
 
@@ -459,22 +460,22 @@ class MapExportThread(QRunnable):
 		
 		mainWindow.setRequestedDialog(DIALOG_STATUS)
 		
-		mainWindow.setTaskTitle("Loading map...")
-		mainWindow.setTaskStatus("Loading map data...")
+		mainWindow.setTaskTitle(_("Loading map..."))
+		mainWindow.setTaskStatus(_("Loading map data..."))
 
 		try:
-			mainWindow.setTaskStatus("Loading cell entities")
+			mainWindow.setTaskStatus(_("Loading cell entities"))
 			mainWindow.setTaskProgress(0/3)
 			mainWindow.setTerminable(mapTab.map.riGenLayers[0])
 			entities = mapTab.getEntities()
 			mainWindow.clearTerminable()
 			mainWindow.setTaskProgress(1/3)
-			mainWindow.setTaskStatus("Writing DPL")
+			mainWindow.setTaskStatus(_("Writing DPL"))
 			mapTab.writeToFile(output, entities)
 			mainWindow.setTaskProgress(2/3)
 			
 			if mapTab.exportAssets.isChecked():
-				mainWindow.setTaskStatus("Exporting assets")
+				mainWindow.setTaskStatus(_("Exporting assets"))
 				mapTab.exportAssetsFunc(output, entities)
 			
 			mainWindow.setTaskProgress(1.0)
@@ -521,7 +522,7 @@ class App(QApplication):
 			elif dialogType == DIALOG_STATUS:
 				self.progressDialog = BusyProgressDialog(self.window)
 			elif dialogType == DIALOG_ERROR:
-				box = MessageBox("An error occured during the process. Check the console for details.")
+				box = MessageBox(_("An error occured during the process. Check the console for details."))
 				box.exec()
 
 	def handleDialogTitle(self, txt:str):

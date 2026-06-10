@@ -4,6 +4,7 @@ from . import ui_settings
 from ..util.misc import openFile
 from ..util.enums import *
 from ..util.settings import SETTINGS
+from ..strings import _
 
 
 class SettingsDialog(QDialog, ui_settings.Ui_settings):
@@ -51,10 +52,10 @@ class SettingsDialog(QDialog, ui_settings.Ui_settings):
 
 
 		self.studiomdlLine.setText(SETTINGS.getValue(SETTINGS_STUDIOMDL_PATH))
-		self.studioMdlBtn.clicked.connect(lambda: self.selectFile("Select StudioMDL binary", ["studiomdl.exe"], SETTINGS_STUDIOMDL_PATH, self.studiomdlLine))
+		self.studioMdlBtn.clicked.connect(lambda: self.selectFile(_("Select StudioMDL binary"), ["studiomdl.exe"], SETTINGS_STUDIOMDL_PATH, self.studiomdlLine))
 
 		self.gameInfoLine.setText(SETTINGS.getValue(SETTINGS_GAMEINFO_PATH))
-		self.gameInfoBtn.clicked.connect(lambda: self.selectFile("Select gameinfo.txt", ["gameinfo.txt"], SETTINGS_GAMEINFO_PATH, self.gameInfoLine))
+		self.gameInfoBtn.clicked.connect(lambda: self.selectFile(_("Select gameinfo.txt"), ["gameinfo.txt"], SETTINGS_GAMEINFO_PATH, self.gameInfoLine))
 	
 	def selectFile(self, title:str, nameFilters:list[str], settingKey:str, lineEdit:QLineEdit):
 		dialog = openFile(self, title = title, nameFilters = nameFilters, fileMode = QFileDialog.ExistingFile)

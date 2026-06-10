@@ -17,6 +17,7 @@ from ..parse.gameres import GameResourcePack
 from traceback import format_exc
 from .progressDialog import MessageBox
 from ..util.settings import SETTINGS
+from ..strings import _
 from subprocess import Popen
 from glob import glob
 
@@ -87,7 +88,7 @@ class SimpleItem:
 
 						# LOD submenu if data already computed (no sync call — exports handle it)
 						if hasattr(asset, 'lodCount') and asset.lodCount > 1:
-							submenu = menu.addMenu("Export LOD...")
+							submenu = menu.addMenu(_("Export LOD..."))
 
 							for i in range(asset.lodCount):
 								submenu.addAction(ExportToDMF(menu, self, i))
@@ -107,7 +108,7 @@ class SimpleItem:
 
 					log.subLevel(log.curLevel - level)
 
-					MessageBox("Failed to compute preliminary data. Check the console for details.").exec()
+					MessageBox(_("Failed to compute preliminary data. Check the console for details.")).exec()
 			elif isinstance(asset, Pack):
 				menu.addAction(ExtractAll(menu, self))
 
@@ -169,7 +170,7 @@ class AssetItem(SimpleItem):
 
 class FolderItem(SimpleItem):
 	__ICON = None
-	__TYPE = "Folder"
+	__TYPE = _("Folder")
 
 	def __init__(self, mainWindow:QMainWindow, finfo:QFileInfo):
 		if not FolderItem.__ICON:
@@ -306,12 +307,12 @@ class OpenFileLocation(CustomAction):
 	
 	@property
 	def actionText(self) -> str:
-		return "Open file location"
+		return _("Open file location")
 
 class OpenParentFileLocation(OpenFileLocation):
 	@property
 	def actionText(self) -> str:
-		return "Open parent location"
+		return _("Open parent location")
 	
 	
 	def run(self):
@@ -325,7 +326,7 @@ class CopyPathToClipboard(CustomAction):
 	
 	@property
 	def actionText(self) -> str:
-		return "Copy path to clipboard"
+		return _("Copy path to clipboard")
 
 class CopyNameToClipboard(CustomAction):
 	item:AssetItem
@@ -335,7 +336,7 @@ class CopyNameToClipboard(CustomAction):
 	
 	@property
 	def actionText(self) -> str:
-		return "Copy name to clipboard"
+		return _("Copy name to clipboard")
 
 
 
@@ -348,7 +349,7 @@ class SaveAction(ThreadedAction):
 
 			self.makeOutputFolder(True, "output")
 		else:
-			dialog = openFile(title = "Save to", fileMode = QFileDialog.DirectoryOnly)
+			dialog = openFile(title = _("Save to"), fileMode = QFileDialog.DirectoryOnly)
 
 			if dialog == None:
 				return
@@ -466,7 +467,7 @@ class PackedSave(AssetSaveAction):
 class Extract(AssetSaveAction):
 	@property
 	def actionText(self) -> str:
-		return "Extract"
+		return _("Extract")
 	
 	@property
 	def taskTitle(self) -> str:
@@ -478,7 +479,7 @@ class Extract(AssetSaveAction):
 class ExtractAll(Extract, PackedSave):
 	@property
 	def actionText(self) -> str:
-		return "Extract all"
+		return _("Extract all")
 	
 	@property
 	def taskTitle(self) -> str:
@@ -494,7 +495,7 @@ class ExtractAll(Extract, PackedSave):
 class ExportToDDS(Extract):
 	@property
 	def actionText(self) -> str:
-		return "Export to DDS"
+		return _("Export to DDS")
 	
 	@property
 	def taskTitle(self) -> str:
@@ -506,7 +507,7 @@ class ExportToDDS(Extract):
 class ExportAllToDDS(ExportToDDS, PackedSave):
 	@property
 	def actionText(self) -> str:
-		return "Export all to DDS"
+		return _("Export all to DDS")
 	
 	@property
 	def taskTitle(self) -> str:
@@ -569,7 +570,7 @@ class ExportToSource(SaveAction):
 		else:
 			stepCnt = 3
 		
-		self.setTaskStatus("Generating model data")
+		self.setTaskStatus(_("Generating model data"))
 
 		if self.handleTermination(asset):
 			return
@@ -580,7 +581,7 @@ class ExportToSource(SaveAction):
 		if self.handleTermination(smdl):
 			return
 		
-		self.setTaskStatus("Exporting model data to QC, SMD and VMT")
+		self.setTaskStatus(_("Exporting model data to QC, SMD and VMT"))
 		qc, texturePaths = smdl.export(output, modelPath, exportCollisionModel, exportSMDs)
 		self.setTaskProgress(2/stepCnt)
 		self.clearTerminable()
@@ -599,7 +600,7 @@ class ExportToSource(SaveAction):
 			if self.shouldTerminate:
 				return
 			
-			self.setTaskStatus("Compiling")
+			self.setTaskStatus(_("Compiling"))
 
 			pipes = Popen([
 				SETTINGS.getValue(SETTINGS_STUDIOMDL_PATH), 
@@ -636,7 +637,7 @@ class ExportToSource(SaveAction):
 		self.setTaskProgress(3/stepCnt)
 
 		if exportTex and texturePaths is not None:
-			self.setTaskStatus("Exporting textures")
+			self.setTaskStatus(_("Exporting textures"))
 			log.addLevel()
 			mdl = smdl.model
 
@@ -651,7 +652,7 @@ class ExportToSource(SaveAction):
 				return
 
 			self.setTaskProgress(4/stepCnt)
-			self.setTaskStatus("Converting textures to VTF")
+			self.setTaskStatus(_("Converting textures to VTF"))
 			log.addLevel()
 
 			materialsPath = path.join(sourceExport, "materials")
@@ -722,7 +723,7 @@ class ExportLODsToSource(ExportToSource):
 
 	@property
 	def actionText(self) -> str:
-		return "Export all LODs to Source engine"
+		return _("Export all LODs to Source engine")
 	
 	@property
 	def taskTitle(self) -> str:

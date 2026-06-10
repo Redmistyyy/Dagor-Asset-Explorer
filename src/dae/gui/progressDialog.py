@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets, QtGui
 from . import ui_progress
 from ..util.misc import getResPath
+from ..strings import _
 from winsound import PlaySound, SND_ALIAS, SND_ASYNC
 
 LOADING_GIF_PATH = getResPath("loading.gif")
@@ -16,7 +17,7 @@ class MessageBox(QtWidgets.QMessageBox):
 
 		self.setIcon(QtWidgets.QMessageBox.Icon.Critical)
 		self.setIconPixmap(QtGui.QPixmap(ERROR_ICO_PATH))
-		self.setWindowTitle("Unfunny!")
+		self.setWindowTitle(_("Unfunny!"))
 		self.setText(text)
 		self.setStandardButtons(QtWidgets.QMessageBox.Ok)
 

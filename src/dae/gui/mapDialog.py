@@ -15,6 +15,7 @@ from ..parse.realres import RendInst, DynModel
 from ..util.enums import *
 from ..util.settings import SETTINGS
 from ..util.assetcacher import AssetCacher
+from ..strings import _
 from struct import pack
 
 
@@ -98,7 +99,7 @@ def getOutputDir():
 
 		output = makeOutputFolder(output, True, "output")
 	else:
-		dialog = openFile(title = "Save to", fileMode = QFileDialog.DirectoryOnly)
+		dialog = openFile(title = _("Save to"), fileMode = QFileDialog.DirectoryOnly)
 
 		if dialog == None:
 			return None
