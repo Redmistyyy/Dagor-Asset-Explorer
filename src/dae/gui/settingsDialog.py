@@ -1,10 +1,10 @@
 
-from PySide6.QtWidgets import QDialog, QWidget, QCheckBox, QLineEdit, QPushButton, QFileDialog, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QWidget, QCheckBox, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QComboBox, QLabel
 from . import ui_settings
 from ..util.misc import openFile
 from ..util.enums import *
 from ..util.settings import SETTINGS
-from ..strings import _
+from ..strings import _, load_lang
 
 
 class SettingsDialog(QDialog, ui_settings.Ui_settings):
@@ -56,6 +56,20 @@ class SettingsDialog(QDialog, ui_settings.Ui_settings):
 
 		self.gameInfoLine.setText(SETTINGS.getValue(SETTINGS_GAMEINFO_PATH))
 		self.gameInfoBtn.clicked.connect(lambda: self.selectFile(_("Select gameinfo.txt"), ["gameinfo.txt"], SETTINGS_GAMEINFO_PATH, self.gameInfoLine))
+
+		# Language selector
+		langLabel = QLabel(_("Language"), self.general)
+		self.verticalLayout.addWidget(langLabel)
+
+		self.langCombo = QComboBox(self.general)
+		self.langCombo.addItem("English", "en")
+		self.langCombo.addItem("中文", "zh")
+		idx = self.langCombo.findData(SETTINGS.getValue(SETTINGS_LANGUAGE))
+		if idx >= 0:
+			self.langCombo.setCurrentIndex(idx)
+		self.langCombo.currentIndexChanged.connect(self.onLangChanged)
+		self.verticalLayout.addWidget(self.langCombo)
+		# Note: language change takes effect on next launch
 	
 	def selectFile(self, title:str, nameFilters:list[str], settingKey:str, lineEdit:QLineEdit):
 		dialog = openFile(self, title = title, nameFilters = nameFilters, fileMode = QFileDialog.ExistingFile)
@@ -93,3 +107,9 @@ class SettingsDialog(QDialog, ui_settings.Ui_settings):
 
 		if layout is not None:
 			self.handleLayout(layout, not newVal)
+
+	def onLangChanged(self, idx):
+		lang = self.langCombo.itemData(idx)
+		if lang:
+			SETTINGS.setValue(SETTINGS_LANGUAGE, lang)
+			load_lang(lang)

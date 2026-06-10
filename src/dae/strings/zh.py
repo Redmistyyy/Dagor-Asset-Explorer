@@ -18,10 +18,12 @@ STRINGS = {
     "Collapse all": "全部折叠",
     "Expand all": "全部展开",
 
-    # ── Settings ──
+    # ── Settings dialog ──
     "Settings...": "设置...",
     "Select StudioMDL binary": "选择 StudioMDL 程序",
     "Select gameinfo.txt": "选择 gameinfo.txt",
+    "Language": "语言",
+    "General": "常规",
 
     # ── Status messages ──
     "Mounting assets": "正在挂载资源",
