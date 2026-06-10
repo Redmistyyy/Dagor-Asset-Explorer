@@ -101,6 +101,7 @@ class BinFile(BufferedReader):
 		sz = len(data)
 
 		self.__data = self.__data[:offset] + data + self.__data[offset + sz:]
+		self.__size = max(self.__size, offset + sz)
 
 		self.seek(sz, 1)
 	

@@ -126,7 +126,7 @@ power = 2**10
 def formatBytes(size):
 	n = 0
 
-	while size > power and n < powerLabelCnt:
+	while size >= power and n < powerLabelCnt:
 		size /= power
 		n += 1
 	

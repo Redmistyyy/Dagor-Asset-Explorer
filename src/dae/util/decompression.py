@@ -8,8 +8,7 @@ from ctypes import create_string_buffer, c_void_p, c_int64, c_int, c_size_t
 from os import path
 from zlib import decompress as zlibdecompress
 from zlib import compress as zlibcompress
-from pylzma import decompress as lzmadecompress
-from pylzma import compress as lzmacompress
+from lzma import decompress as lzmadecompress, compress as lzmacompress, FORMAT_RAW, FILTER_LZMA1
 from util.misc import loadDLL
 from struct import pack
 from util.fileread import *
@@ -198,8 +197,11 @@ def zlibDecompress(data:bytes):
 def zlibCompress(data:bytes):
 	return zlibcompress(data)
 
+# pylzma defaults: LZMA1, lc=3, lp=0, pb=2
+_LZMA_FILTERS = [{"id": FILTER_LZMA1, "lc": 3, "lp": 0, "pb": 2}]
+
 def lzmaDecompress(data:bytes):
-	return lzmadecompress(data)
+	return lzmadecompress(data, format=FORMAT_RAW, filters=_LZMA_FILTERS)
 
 def lzmaCompress(data:bytes):
-	return lzmacompress(data)
+	return lzmacompress(data, format=FORMAT_RAW, filters=_LZMA_FILTERS)

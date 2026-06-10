@@ -1,11 +1,12 @@
 import sys
-# from os import path
+from os import path
 
-# fp = path.dirname(path.abspath(__file__))
-
-# sys.path.append(path.join(fp, "gui"))
-# sys.path.append(path.join(fp, "parse"))
-# sys.path.append(path.join(fp, "util"))
+# Add project root so Lib/site-packages (and lib/, ui/, res/) are reachable
+_srcdir = path.dirname(path.abspath(__file__))
+_rootdir = path.dirname(path.dirname(_srcdir))  # src/dae/ -> src/ -> project root
+if path.exists(path.join(_rootdir, "Lib", "site-packages")):
+    sys.path.insert(0, path.join(_rootdir, "Lib", "site-packages"))
+sys.path.insert(0, _srcdir)
 
 from gui import app
 

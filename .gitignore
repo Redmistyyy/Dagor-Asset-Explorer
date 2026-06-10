@@ -15,3 +15,8 @@ dist
 *.mvd
 /src/program.py
 /DagorAssetExplorer.exe
+
+# pip install artifacts
+/Lib/site-packages/
+/Scripts/
+/.pytest_cache/
